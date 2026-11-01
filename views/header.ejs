@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Consultas Médicas</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">🩺 Consultas Médicas</a>
+  <% if (user) { %>
+  <nav>
+    <a href="/consultas">Consultas</a>
+    <a href="/medicos">Médicos</a>
+    <% if (user.role === 'admin') { %>
+      <a href="/lembretes">🔔 Lembretes<% if (pendingCount) { %> <span class="badge"><%= pendingCount %></span><% } %></a>
+      <a href="/membros">Família</a>
+    <% } %>
+    <a href="/perfil">Meu perfil</a>
+    <form method="post" action="/sair" class="inline"><button class="link">Sair</button></form>
+  </nav>
+  <% } %>
+</header>
+<main>
+<% if (flash) { %><div class="flash"><%= flash %></div><% } %>
+<% if (user && user.role === 'admin' && pendingCount) { %>
+  <a class="alert" href="/lembretes">🔔 Você tem <strong><%= pendingCount %></strong> lembrete<%= pendingCount > 1 ? 's' : '' %> para enviar no WhatsApp →</a>
+<% } %>

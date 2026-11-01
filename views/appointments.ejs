@@ -1,0 +1,18 @@
+<%- include('header') %>
+<div class="card">
+  <div class="row"><h2>Consultas</h2><a class="btn" href="/consultas/nova">+ Nova consulta</a></div>
+  <form method="get" class="filters">
+    <select name="filtro" onchange="this.form.submit()">
+      <option value="proximas" <%= filter === 'proximas' ? 'selected' : '' %>>Próximas</option>
+      <option value="passadas" <%= filter === 'passadas' ? 'selected' : '' %>>Passadas</option>
+    </select>
+    <% if (members.length) { %>
+    <select name="membro" onchange="this.form.submit()">
+      <option value="">Toda a família</option>
+      <% members.forEach(m => { %><option value="<%= m.id %>" <%= memberId === m.id ? 'selected' : '' %>><%= m.name %></option><% }) %>
+    </select>
+    <% } %>
+  </form>
+  <%- include('appt_list', { appointments }) %>
+</div>
+<%- include('footer') %>

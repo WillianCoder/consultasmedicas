@@ -1,0 +1,19 @@
+<% if (!appointments.length) { %>
+  <p class="muted">Nenhuma consulta por aqui.</p>
+<% } else { %>
+<ul class="list">
+  <% appointments.forEach(a => { %>
+  <li>
+    <div>
+      <strong><%= formatDateTime(a.date_time) %></strong>
+      <span class="tag status-<%= a.status %>"><%= a.status %></span>
+      <div><%= a.patient %> · <%= [a.doctor, a.specialty].filter(Boolean).join(' – ') || 'Consulta' %></div>
+      <% if (a.location) { %><div class="muted">📍 <%= a.location %></div><% } %>
+    </div>
+    <% if (user.role === 'admin' || a.user_id === user.id) { %>
+      <a class="btn small secondary" href="/consultas/<%= a.id %>/editar">Editar</a>
+    <% } %>
+  </li>
+  <% }) %>
+</ul>
+<% } %>

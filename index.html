@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="claro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Consultas da Família</title>
+  <meta name="description" content="Agenda de consultas médicas da família, com lembretes no WhatsApp.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header id="topbar" hidden>
+    <div class="bar">
+      <a class="brand" href="#inicio">🩺 Consultas da Família</a>
+      <button id="menu-btn" class="menu-btn" aria-label="Abrir menu" aria-expanded="false">☰</button>
+      <nav id="nav"></nav>
+    </div>
+  </header>
+  <div id="demo-banner" class="demo" hidden></div>
+  <main id="app"><p class="loading">Carregando…</p></main>
+  <div id="modal" class="modal" hidden></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="firebase-config.js"></script>
+  <script>
+    // Só carrega o Firebase se ele estiver configurado
+    if (window.FIREBASE_CONFIG && window.FIREBASE_CONFIG.apiKey) {
+      ['app', 'auth', 'firestore'].forEach(function (m) {
+        document.write('<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-' + m + '-compat.js"><\/script>');
+      });
+    }
+  </script>
+  <script src="store.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

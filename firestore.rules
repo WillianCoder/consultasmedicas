@@ -1,0 +1,34 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isAdmin() { return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && me().role == 'admin'; }
+
+    // Cadastro de cada familiar
+    match /users/{uid} {
+      allow read: if signedIn();
+      // Cada um cria a própria conta como membro. Só o usuário "barbara" já nasce administrador.
+      allow create: if signedIn() && request.auth.uid == uid && (
+        request.resource.data.role == 'membro' ||
+        (request.resource.data.role == 'admin' && request.auth.token.email == 'barbara@consultas-familia.app'));
+      // Cada um edita o próprio perfil, mas não muda o próprio poder. O admin edita tudo.
+      allow update: if isAdmin() || (signedIn() && request.auth.uid == uid
+        && request.resource.data.role == resource.data.role);
+      allow delete: if isAdmin();
+    }
+
+    match /doctors/{id} {
+      allow read, create: if signedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    // Consultas: cada um vê e mexe nas suas; o admin vê e mexe em todas
+    match /appointments/{id} {
+      allow read, delete: if isAdmin() || (signedIn() && resource.data.memberId == request.auth.uid);
+      allow update: if isAdmin() || (signedIn() && resource.data.memberId == request.auth.uid
+        && request.resource.data.memberId == request.auth.uid);
+      allow create: if isAdmin() || (signedIn() && request.resource.data.memberId == request.auth.uid);
+    }
+  }
+}
